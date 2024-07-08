@@ -40,7 +40,7 @@ jobs:
         run: |
           echo Skip version file update and docker image creation
 
-      - name: Update version in package.json
+      - name: Update version key in package.json
         if: ${{ !contains(needs.release_job.outputs.version, 'undefined') }}
         run: |
           sed -i 's/"version": ".*/"version": "${{ needs.release_job.outputs.version }}",/' package.json
@@ -54,6 +54,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
+        if: ${{ !contains(needs.release_job.outputs.version, 'undefined') }}
         id: push
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
